@@ -1,18 +1,25 @@
 from flask import Flask, jsonify
 import psycopg2
 import redis
+import os
+
+db_host = os.getenv("PGDB_HOST")
+db_user = os.getenv("PGDB_USER")
+db_password = os.getenv("PGDB_PASSWORD")
+db_name = os.getenv("PGDB_NAME")
+redis_host = os.getenv("REDIS_HOST")
 
 app = Flask(__name__)
 
 # Connect to Redis
-cache = redis.Redis(host='c0936063-redis', port=6379)
+cache = redis.Redis(host=redis_host, port=6379)
 
 # Connect to PostgreSQL
 def get_db_connection():
-    conn = psycopg2.connect(host="c0936063-db",
-                            database="mydb",
-                            user="c0936063",
-                            password="pass123")
+    conn = psycopg2.connect(host=db_host,
+                            database=db_name,
+                            user=db_user,
+                            password=db_password)
     return conn
 
 @app.route('/')
